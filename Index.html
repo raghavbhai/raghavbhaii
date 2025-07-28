@@ -1,0 +1,379 @@
+<!DOCTYPE html>   
+<html lang="en">    
+<head>    
+  <meta charset="UTF-8" />    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>    
+  <title>KC विलास - 5 Star Hotel</title>      <!-- Swiper CSS -->      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />      <style>    
+    * {    
+      margin: 0;    
+      padding: 0;    
+      box-sizing: border-box;    
+    }    
+    
+    html, body {    
+      height: 100%;    
+      overflow-x: hidden;    
+      font-family: 'Segoe UI', sans-serif;    
+    }    
+    
+    #welcome-overlay {    
+      position: fixed;    
+      top: 0;    
+      left: 0;    
+      height: 100vh;    
+      width: 100vw;    
+      background-color: white;    
+      display: flex;    
+      align-items: center;    
+      justify-content: center;    
+      z-index: 10000;    
+      animation: tvOff 1s ease-out forwards 2s;    
+    }    
+    
+    #welcome-overlay h1 {    
+      font-size: clamp(3rem, 10vw, 10rem);    
+      font-weight: bold;    
+      display: flex;    
+      gap: 10px;    
+    }    
+    
+    .wel { color: red; }    
+    .come { color: yellow; }    
+    
+    @keyframes tvOff {    
+      0% { transform: scale(1, 1); opacity: 1; }    
+      80% { transform: scale(1, 0.1); opacity: 1; }    
+      100% { transform: scale(0, 0); opacity: 0; visibility: hidden; }    
+    }    
+    
+    .bg-video {    
+      position: fixed;    
+      top: 0;    
+      left: 0;    
+      height: 100vh;    
+      width: 100vw;    
+      object-fit: cover;    
+      z-index: -1;    
+    }    
+    
+    .overlay {    
+      position: fixed;    
+      top: 0; left: 0;    
+      width: 100vw;    
+      height: 100vh;    
+      background-color: rgba(0, 0, 0, 0.5);    
+      z-index: 0;    
+    }    
+    
+    .content {    
+      position: relative;    
+      z-index: 1;    
+      color: #fff;    
+      text-align: center;    
+      top: 40%;    
+      transform: translateY(-50%);    
+    }    
+    
+    header {    
+      background: #1e1e1e;    
+      color: #fff;    
+      padding: 20px;    
+      z-index: 1;    
+      position: relative;    
+      display: flex;    
+      align-items: center;    
+      justify-content: space-between;    
+    }    
+    
+    nav {    
+      text-align: center;    
+      background: #222;    
+      padding: 15px;    
+      z-index: 1;    
+      position: relative;    
+    }    
+    
+    nav a {    
+      color: #fff;    
+      margin: 0 15px;    
+      text-decoration: none;    
+      font-weight: bold;    
+      font-size: 18px;    
+    }    
+    
+    nav a:hover {    
+      color: #ffd700;    
+    }    
+    
+    .tab-section {    
+      display: none;    
+      opacity: 0;    
+      transition: opacity 0.5s ease;    
+      padding: 60px 20px;    
+      background-color: #fff;    
+      margin: 30px auto;    
+      max-width: 800px;    
+      border-radius: 15px;    
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);    
+      z-index: 1;    
+      position: relative;    
+    }    
+    
+    .tab-section.active {    
+      display: block;    
+      opacity: 1;    
+    }    
+    
+    form input, form textarea, form button {    
+      width: 90%;    
+      max-width: 400px;    
+      margin: 10px auto;    
+      padding: 12px;    
+      display: block;    
+      border-radius: 6px;    
+      border: 1px solid #ccc;    
+    }    
+    
+    button {    
+      background: linear-gradient(135deg, #d4af37, #b8860b);    
+      color: white;    
+      border: none;    
+      border-radius: 10px;    
+      padding: 14px 28px;    
+      font-size: 16px;    
+      font-weight: bold;    
+      cursor: pointer;    
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);    
+      transition: all 0.3s ease;    
+    }    
+    
+    footer {    
+      background: #1e1e1e;    
+      color: #fff;    
+      text-align: center;    
+      padding: 20px;    
+      margin-top: 40px;    
+      position: relative;    
+      z-index: 1;    
+    }    
+    
+    .swiper {    
+      width: 90%;    
+      height: 400px;    
+      margin: 30px auto;    
+      border-radius: 15px;    
+      overflow: hidden;    
+    }    
+    
+    .swiper-slide {    
+      display: flex;    
+      justify-content: center;    
+      align-items: center;    
+      background: #fff;    
+      transition: transform 0.5s ease;    
+    }    
+    
+    #thankyou-popup {    
+      position: fixed;    
+      top: 50%;    
+      left: 50%;    
+      transform: translate(-50%, -50%) scale(0);    
+      background: white;    
+      padding: 30px 40px;    
+      border-radius: 20px;    
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);    
+      text-align: center;    
+      z-index: 10001;    
+      transition: transform 0.3s ease;    
+    }    
+    
+    #thankyou-popup.show {    
+      transform: translate(-50%, -50%) scale(1);    
+    }    
+    
+    #thankyou-popup img {    
+      width: 100px;    
+      margin-bottom: 15px;    
+    }    
+    
+    #thankyou-popup h3 {    
+      color: #d4af37;    
+    }    
+  </style>    </head>    
+<body>      <!-- Welcome animation -->      <div id="welcome-overlay">    
+    <h1><span class="wel">WEL</span><span class="come">COME</span></h1>    
+  </div>      <!-- Background Video -->      <video class="bg-video" autoplay muted loop playsinline>    
+    <source src="VID_20250726_193432_813.mp4" type="video/mp4">    
+  </video>      <div class="overlay"></div>      <div class="content">    
+    <h1 style="font-size: 100px;">°</h1>    
+  </div>      <!-- Header -->      <header>    
+    <div style="display: flex; align-items: center;">    
+      <img src="IMG_20250727_140414.png" alt="KC Vilaas Logo" style="height: 60px; margin-right: 15px; border-radius: 50%;">    
+      <h2 style="margin: 0;">KC विलास</h2>    
+    </div>    
+  </header>      <!-- Navigation -->      <nav>    
+    <a href="#home">Home</a>    
+    <a href="#rooms">Rooms</a>    
+    <a href="#wedding">Wedding</a>    
+    <a href="#about">About</a>    
+    <a href="#contact">Contact</a>    
+  </nav>      <!-- Sections -->      <section id="home" class="tab-section">    
+    <h2 style="text-align: center;">WELCOME TO KC विलास</h2>    
+    <h3><p style="text-align: center;">CLICK HERE</p></h3>    <div style="text-align:center; margin-bottom: 20px;">    
+  <button onclick="showSwiperTab('images')">Images</button>    
+  <button onclick="showSwiperTab('videos')">Videos</button>    
+</div>    
+
+<div id="swiper-images" class="swiper mySwiper">    
+  <div class="swiper-wrapper">    
+    <div class="swiper-slide"><img src="IMG_20250727_081712.jpg" style="width: 80%; border-radius: 3px;"></div>    
+    <div class="swiper-slide"><img src="IMG_20250727_081740.jpg" style="width: 75%; border-radius: 2px;"></div>    
+    <div class="swiper-slide"><img src="IMG_20250727_081603.jpg" style="width: 75%; border-radius: 2px;"></div>    
+    <div class="swiper-slide"><img src="IMG_20250727_081626.jpg" style="width: 75%; border-radius: 2px;"></div>    
+    <div class="swiper-slide"><img src="IMG_20250727_081808.jpg" style="width: 75%; border-radius: 2px;"></div>    
+  </div>    
+  <div class="swiper-pagination"></div>    
+</div>    
+
+<div id="swiper-videos" class="swiper mySwiper" style="display: none;">    
+  <div class="swiper-wrapper">    
+    <div class="swiper-slide">    
+      <video controls style="height:100%;width: 90%; border-radius: 10px;">    
+        <source src="VID_20250726_193742_371.mp4" type="video/mp4">    
+      </video>    
+    </div>    
+    <div class="swiper-slide">    
+      <video controls style="height:100%;width: 70%; border-radius: 10px;">    
+        <source src="VID_20250726_193750_956.mp4" type="video/mp4">    
+      </video>    
+    </div>    
+  </div>    
+  <div class="swiper-pagination"></div>    
+</div>
+
+  </section>     
+  
+  <section id="rooms" class="tab-section">    
+    <h2>Our Rooms</h2>    
+   <form id="roomsForm">
+  <input type="text" name="name" placeholder="Name" required />
+  <input type="email" name="email" placeholder="Email" required />
+  <input type="date" name="date" placeholder="Date" required />
+  <input type="tel" name="contact" placeholder="Contact" required />
+  <textarea name="request" placeholder="Request"></textarea>
+  <button type="submit">Book Room</button>
+</form>
+  </section>     
+  <section id="wedding" class="tab-section">    
+    <h2>Wedding Booking</h2>    
+  <form id="weddingForm">
+  <input type="text" name="name" placeholder="Name" required />
+  <input type="email" name="email" placeholder="Email" required />
+  <input type="date" name="date" placeholder="Date" required />
+  <input type="tel" name="contact" placeholder="Contact" required />
+  <textarea name="request" placeholder="Request"></textarea>
+  <button type="submit">Book Wedding</button>
+</form>
+  </section>      <section id="about" class="tab-section">    
+    <h2>About Us</h2>    
+    <p>KC विलास is a luxury 5-star hotel located in Fagu, Shimla (H.P).</p>    
+  </section>      <section id="contact" class="tab-section">    
+    <h2>Contact Us</h2>    
+    <p>    
+      Email: kc.vilas@gmail.com<br>    
+      Phone: +918580610036 <br> +917018720036<br>    
+      Address: New Kufri, Fagu, Kufri, India, 171209.    
+    </p>    
+    <p>    
+      <a href="https://maps.app.goo.gl/SHrKaGMgbHj8tiVq6" target="_blank">    
+        <img src="https://img.icons8.com/color/48/000000/google-maps-new.png" width="30"/> Locate Us    
+      </a>    
+    </p>    
+    <a href="https://www.instagram.com/kc.vilaas?igsh=MTd5d2RmaTI2MHJvbA==" target="_blank">    
+      <img src="https://img.icons8.com/fluency/48/000000/instagram-new.png" width="30"/> Follow us    
+    </a>    
+  </section>      <footer>    
+    &copy; 2025 KC VILAS. All rights reserved.    
+  </footer>      <!-- Thank You Popup -->      <div id="thankyou-popup">    
+    <img src="https://cdn-icons-png.flaticon.com/512/3159/3159066.png" alt="Thank You" />    
+    <h3>Thank you!</h3>    
+    <p>Your booking has been received.</p>    
+  </div>      <!-- Swiper JS -->      <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>      <!-- Script -->      <script>    
+    const sections = document.querySelectorAll(".tab-section");    
+    const navLinks = document.querySelectorAll("nav a");    
+    
+    function showSection(id) {    
+      sections.forEach(section => {    
+        section.classList.toggle("active", section.id === id);    
+      });    
+    }    
+    
+    function showSwiperTab(type) {    
+      document.getElementById("swiper-images").style.display = type === "images" ? "block" : "none";    
+      document.getElementById("swiper-videos").style.display = type === "videos" ? "block" : "none";    
+    }    
+    
+    navLinks.forEach(link => {    
+      link.addEventListener("click", function(e) {    
+        e.preventDefault();    
+        const targetId = this.getAttribute("href").replace("#", "");    
+        showSection(targetId);    
+      });    
+    });    
+    
+    window.onload = () => {    
+      showSection("home");    
+      new Swiper(".mySwiper", {    
+        effect: "cube",    
+        grabCursor: true,    
+        loop: true,    
+        autoplay: {    
+          delay: 5000,    
+          disableOnInteraction: false,    
+        },    
+        pagination: {    
+          el: ".swiper-pagination",    
+          clickable: true,    
+        },    
+      });    
+    };    
+    
+    function showThankYouPopup() {    
+      const popup = document.getElementById('thankyou-popup');    
+      popup.classList.add('show');    
+      setTimeout(() => {    
+        popup.classList.remove('show');    
+      }, 3000);    
+    }    
+  </script>    
+<script>
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbwfpg4pVQxyq6RXweDZq_agFAcLSRrxcA5wzxMZHhRftOJsysIodj4ApAtZJBCf00mM8g/exec';
+
+  function sendBooking(form, type) {
+    const formData = new FormData(form);
+    formData.append("type", type);
+
+    fetch(scriptURL, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      showThankYouPopup();
+      form.reset();
+    })
+    .catch(error => console.error('Error!', error.message));
+  }
+
+  // Attach event listeners to forms
+  document.getElementById('roomsForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    sendBooking(this, 'Room');
+  });
+
+  document.getElementById('weddingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    sendBooking(this, 'Wedding');
+  });
+</script>
+</body>    
+</html>    
